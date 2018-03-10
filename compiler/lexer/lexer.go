@@ -171,21 +171,19 @@ var labelAccpetFn = func(r rune) bool {
 	return false
 }
 
-var spaceAccpetFn = func(r rune) bool {
-	if isSpace(r) {
-		return true
-	}
-	return false
-}
-
 // acceptRunLabel consumes a run of runes from the valid label.
 func (l *Lexer) acceptRunLabel() {
 	l.acceptRunFn(labelAccpetFn)
 }
 
-// acceptRunLabel consumes a run of runes from the valid label.
-func (l *Lexer) acceptRunSpace() {
-	l.acceptRunFn(spaceAccpetFn)
+func (l *Lexer) skipWhitespace() {
+	for ch := l.next(); isSpace(ch); ch = l.next() {
+		if ch == '\n' {
+			l.line++
+		}
+	}
+	l.backup()
+	l.start = l.pos
 }
 
 func (l *Lexer) hasPrefix(prefix string) bool {

@@ -56,16 +56,11 @@ func lexInlineHtml(l *Lexer) stateFn {
 }
 
 func lexInScript(l *Lexer) stateFn {
+	l.skipWhitespace()
+
 	if l.pos >= len(l.input) {
 		l.emit(token.End).pop()
 		return nil
-	}
-
-	// TODO:
-	if isSpace(l.peek()) {
-		l.acceptRun(whiteSpace)
-		//		l.emit(token.Whitespace)
-		return lexInScript
 	}
 
 	if l.hasPrefix("->") {
@@ -543,12 +538,14 @@ func lexInScript(l *Lexer) stateFn {
 
 			if ident == "yield" { // yield from
 				pos := l.pos
-				l.acceptRunSpace()
-				if l.hasPrefix("from") {
-					l.pos += len("from")
-					if !isLabel(l.peek()) {
-						l.emit(token.YieldFrom)
-						return lexInScript
+				if l.accept(whiteSpace) {
+					l.acceptRun(whiteSpace)
+					if l.hasPrefix("from") {
+						l.pos += len("from")
+						if !isLabel(l.peek()) {
+							l.emit(token.YieldFrom)
+							return lexInScript
+						}
 					}
 				}
 				l.pos = pos
@@ -665,11 +662,9 @@ func lexVarOffset(l *Lexer) stateFn {
 }
 
 func lexLookingForProperty(l *Lexer) stateFn {
+	l.skipWhitespace()
+
 	switch cur := l.peek(); cur {
-	case ' ', '\t', '\r', '\n':
-		l.acceptRunSpace()
-		// l.emit(token.Whitespace)
-		return lexLookingForProperty
 	case '-':
 		if l.peekN(1) == '>' {
 			l.pos += len("->")
