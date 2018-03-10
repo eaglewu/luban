@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"workspace/compiler/ast"
-	"workspace/compiler/token"
+	"github.com/eaglewu/luban/compiler/ast"
+	"github.com/eaglewu/luban/compiler/token"
 )
 
 func (p *Parser) parseStatement() ast.Statement {
