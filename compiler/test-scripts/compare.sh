@@ -23,10 +23,14 @@ find "$1" -type f -name "*.php" | while read fname; do
             \$tokens = token_get_all(\$scripts);
             foreach(\$tokens as \$token){
                 if (is_array(\$token)){
+                    \$tokenName = token_name(\$token[0]);
+                    if (\$tokenName == 'T_WHITESPACE') {
+                        continue;
+                    }
                     \$results[] = [
                         'type'  =>  1,
                         'l'     =>  \$token[2],
-                        't'     =>  token_name(\$token[0]),
+                        't'     =>  \$tokenName,
                         'v'     =>  \$token[1],
                     ];
                 } else {
