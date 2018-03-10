@@ -64,7 +64,7 @@ func lexInScript(l *Lexer) stateFn {
 	// TODO:
 	if isSpace(l.peek()) {
 		l.acceptRun(whiteSpace)
-		l.emit(token.Whitespace)
+		//		l.emit(token.Whitespace)
 		return lexInScript
 	}
 
@@ -668,7 +668,7 @@ func lexLookingForProperty(l *Lexer) stateFn {
 	switch cur := l.peek(); cur {
 	case ' ', '\t', '\r', '\n':
 		l.acceptRunSpace()
-		l.emit(token.Whitespace)
+		// l.emit(token.Whitespace)
 		return lexLookingForProperty
 	case '-':
 		if l.peekN(1) == '>' {
